@@ -10,13 +10,14 @@ An AI-powered database schema synchronization tool that compares two SQL Server 
 - **Logical Operation Order**: Creates, alters, and drops objects in the correct dependency order
 - **Clipboard Integration**: Easy copy-to-clipboard functionality for generated scripts
 - **Modern UI**: Clean, responsive interface with dark mode support
-- **Local Development**: Designed to run locally for security and privacy
+- **Web-Based**: Accessible via web browser with client-side API key configuration
 
 ## 🛠️ Technology Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: TailwindCSS 4, shadcn/ui components
 - **AI Integration**: OpenAI API with Vercel AI SDK
+- **Deployment**: Vercel
 - **Development**: ESLint, Prettier, Turbopack
 
 ## 🏗️ How It Works
@@ -57,27 +58,27 @@ An AI-powered database schema synchronization tool that compares two SQL Server 
    pnpm install
    ```
 
-3. **Environment setup**
-   Create a `.env.local` file:
-   ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   OPENAI_MODEL=gpt-4o-mini
-   ```
-
-4. **Run the development server**
+3. **Run the development server**
    ```bash
    pnpm dev
    ```
 
-5. **Open your browser**
+4. **Open your browser**
    Navigate to `http://localhost:3000`
+
+### Production Deployment
+
+The application is deployed on Vercel and available at the production URL. The OpenAI API key is configured through the web client interface.
+
+**Security Note**: The API key is never stored and is only used temporarily for API requests.
 
 ## 📖 Usage
 
-1. **Paste Source Schema**: Add your reference/target database schema in the "Source" panel
-2. **Paste Target Schema**: Add your current database schema in the "Target" panel  
-3. **Generate Migration**: Click "Merge" to generate the synchronization script
-4. **Copy & Execute**: Use the copy button to copy the generated `sync_schema.sql` script to your clipboard, then paste it into your SQL editor and run it on your database
+1. **Configure API Key**: Enter your OpenAI API key in the web interface
+2. **Paste Source Schema**: Add your reference/target database schema in the "Source" panel
+3. **Paste Target Schema**: Add your current database schema in the "Target" panel  
+4. **Generate Migration**: Click "Merge" to generate the synchronization script
+5. **Copy & Execute**: Use the copy button to copy the generated `sync_schema.sql` script to your clipboard, then paste it into your SQL editor and run it on your database
 
 ## 🔧 Available Scripts
 
