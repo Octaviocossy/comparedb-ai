@@ -81,19 +81,8 @@ export default [
       'import/order': [
         'warn',
         {
-          groups: [
-            'type',
-            'builtin',
-            'object',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
-          ],
-          pathGroups: [
-            { pattern: '~/**', group: 'external', position: 'after' },
-          ],
+          groups: ['type', 'builtin', 'object', 'external', 'internal', 'parent', 'sibling', 'index'],
+          pathGroups: [{ pattern: '~/**', group: 'external', position: 'after' }],
           'newlines-between': 'always',
         },
       ],

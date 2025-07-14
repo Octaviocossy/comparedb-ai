@@ -1,19 +1,30 @@
 'use client';
 
-import { Copy, Download, Loader2, RefreshCw } from 'lucide-react';
+import { AlertCircle, Copy, Download, Loader2, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import dynamic from 'next/dynamic';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeToggle } from '@/hooks';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const ConfigDialog = dynamic(() => import('@/components/config-dialog.component').then((mod) => mod.ConfigDialog), {
+  ssr: false,
+});
 
 export default function Home() {
   const [schema, setSchema] = useState<{ schema_source: string; schema_target: string }>({
     schema_source: '',
     schema_target: '',
+  });
+
+  const [config, setConfig] = useState<{ API_KEY: string | null; MODEL: string | null }>({
+    API_KEY: null,
+    MODEL: null,
   });
 
   const [diff, setDiff] = useState<string | null>(null);
@@ -35,7 +46,14 @@ export default function Home() {
     try {
       const response = await fetch('/api/compare', {
         method: 'POST',
-        body: JSON.stringify(schema),
+        body: JSON.stringify({
+          schema: {
+            schema_source: schema.schema_source,
+            schema_target: schema.schema_target,
+          },
+          openai_key: config.API_KEY,
+          model: config.MODEL,
+        }),
       });
 
       const data = await response.json();
@@ -50,12 +68,9 @@ export default function Home() {
       toast.success('Merge completed', {
         description: 'Database scripts have been successfully compared and merged.',
       });
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Compare failed', {
-        description: 'An error occurred while comparing the scripts.',
-      });
+      toast.error('Compare failed', { description: 'Failed to compare the scripts' });
     } finally {
       setIsLoading((prev) => ({ ...prev, compare: false }));
     }
@@ -146,20 +161,33 @@ export default function Home() {
     }
   }, [schema.schema_source, schema.schema_target, diff]);
 
+  const handleConfig = (API_KEY: string, MODEL: string) => setConfig({ API_KEY, MODEL });
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors flex items-center justify-center">
+      <div className="max-w-7xl w-full mx-auto">
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Database Schema Comparison</h1>
               <p className="text-gray-600 dark:text-gray-400">Compare reference (truth) and target (outdated) database schemas</p>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <ConfigDialog config={config} onConfig={handleConfig} />
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        {config.API_KEY === null && config.MODEL === null && (
+          <Alert variant="warning">
+            <AlertCircle />
+            <AlertTitle>API Key Configuration needed</AlertTitle>
+            <AlertDescription>Please enter an OpenAI API Key, your information will not be stored.</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-6">
           {/* Reference Script */}
           <Card className="h-[600px] flex flex-col bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader>
