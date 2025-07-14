@@ -47,10 +47,8 @@ export default function Home() {
       const response = await fetch('/api/compare', {
         method: 'POST',
         body: JSON.stringify({
-          schema: {
-            schema_source: schema.schema_source,
-            schema_target: schema.schema_target,
-          },
+          schema_source: schema.schema_source,
+          schema_target: schema.schema_target,
           openai_key: config.API_KEY,
           model: config.MODEL,
         }),
