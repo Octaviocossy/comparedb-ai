@@ -11,6 +11,7 @@ An AI-powered database schema synchronization tool that compares two SQL Server 
 - **Clipboard Integration**: Easy copy-to-clipboard functionality for generated scripts
 - **Modern UI**: Clean, responsive interface with dark mode support
 - **Web-Based**: Accessible via web browser with client-side API key configuration
+- **Model Selection**: Support for GPT-4o and GPT-4o-mini models
 
 ## 🛠️ Technology Stack
 
@@ -74,11 +75,11 @@ The application is deployed on Vercel and available at the production URL. The O
 
 ## 📖 Usage
 
-1. **Configure API Key**: Enter your OpenAI API key in the web interface
+1. **Configure API Key**: Click the settings icon to enter your OpenAI API key and select a model (GPT-4o or GPT-4o-mini)
 2. **Paste Source Schema**: Add your reference/target database schema in the "Source" panel
 3. **Paste Target Schema**: Add your current database schema in the "Target" panel  
-4. **Generate Migration**: Click "Merge" to generate the synchronization script
-5. **Copy & Execute**: Use the copy button to copy the generated `sync_schema.sql` script to your clipboard, then paste it into your SQL editor and run it on your database
+4. **Generate Migration**: Click "Compare" to generate the synchronization script
+5. **Copy & Execute**: Use the "Copy Diff" button to copy the generated `sync_schema.sql` script to your clipboard, then paste it into your SQL editor and run it on your database
 
 ## 🔧 Available Scripts
 
@@ -106,10 +107,10 @@ BEGIN TRY
     -- === 4. CREATE/ALTER indexes ===
     -- === 5. CREATE/ALTER views/SPs/functions/triggers ===
     -- === 6. Seed data updates ===
-  COMMIT TRANSACTION;
+  COMMIT;
 END TRY
 BEGIN CATCH
-  ROLLBACK TRANSACTION;
+  ROLLBACK;
   THROW;
 END CATCH;
 ```
