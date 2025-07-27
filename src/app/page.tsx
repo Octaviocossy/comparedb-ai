@@ -6,11 +6,12 @@ import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { SourceButtonComponent } from '@/components/source-button.component';
 import { ThemeToggle } from '@/hooks';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ConfigDialog = dynamic(() => import('@/components/config-dialog.component').then((mod) => mod.ConfigDialog), {
   ssr: false,
@@ -164,13 +165,14 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors flex items-center justify-center">
       <div className="max-w-7xl w-full mx-auto">
         <div className="mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-col md:flex-row gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Database Schema Comparison</h1>
               <p className="text-gray-600 dark:text-gray-400">Compare reference (truth) and target (outdated) database schemas</p>
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle />
+              <SourceButtonComponent />
               <ConfigDialog config={config} onConfig={handleConfig} />
             </div>
           </div>
