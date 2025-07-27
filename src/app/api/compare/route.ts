@@ -1,11 +1,10 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { NextResponse } from 'next/server';
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
+import z from 'zod';
 
 import { TMiddleware } from '@/models';
 import comparedbAiPrompt from '@/prompts/comparedb-ai.prompt.json';
-
-// TODO: handle error when API key or schema is invalid
 
 export const POST: TMiddleware = async (req) => {
   try {
@@ -16,19 +15,17 @@ export const POST: TMiddleware = async (req) => {
       apiKey: openai_key,
     });
 
-    const result = await generateText({
+    const result = await generateObject({
       model: openAI(model),
-      prompt: `
-      ${comparedbAiPrompt.instructions}
-      schema_source: ${schema_source}
-      schema_target: ${schema_target}
-    `,
+      schema: z.object({ changes: z.array(z.string()), sql_script: z.string() }),
+      prompt: `${comparedbAiPrompt.instructions}\n\nschema_source: ${schema_source}\nschema_target: ${schema_target}`,
     });
 
-    return NextResponse.json(result.text);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return NextResponse.json(result.object);
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 };

@@ -54,17 +54,16 @@ export default function Home() {
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Failed to compare the scripts');
+      }
 
-      const cleanedData = data
-        .replace(/```SQL/gi, '')
-        .replace(/```/gi, '')
-        .replace(/\bGO\b/g, '');
+      const data: { changes: string[]; sql_script: string } = await response.json();
 
-      setDiff(cleanedData);
+      setDiff(data.sql_script);
 
-      toast.success('Merge completed', {
-        description: 'Database scripts have been successfully compared and merged.',
+      toast.success('Compare completed', {
+        description: 'Database scripts have been successfully compared.',
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
