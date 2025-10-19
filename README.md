@@ -1,4 +1,4 @@
-# CompareDB AI
+# CompareDB AI 👽 
 
 An AI-powered database schema synchronization tool that compares two SQL Server schemas and generates comprehensive migration scripts. Built for local development and database administration tasks.
 
